@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_inclue_participation_user,inclue.participation user access,model_inclue_participation,base.group_user,1,1,1,0
+access_inclue_participation_manager,inclue.participation manager access,model_inclue_participation,base.group_system,1,1,1,1

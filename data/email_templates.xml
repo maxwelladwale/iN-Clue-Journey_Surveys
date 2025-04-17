@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+        <record id="mail_template_inclue_survey" model="mail.template">
+            <field name="name">iN-Clue Survey Invitation</field>
+            <field name="model_id" ref="model_inclue_participation"/>
+            <field name="subject">You're invited to take the iN-Clue Survey</field>
+            <field name="email_from">${(user.email_formatted or 'noreply@yourcompany.com')|safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or object.partner_id.email)|safe}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6;">
+                    <p>Hello ${object.partner_id.name},</p>
+
+                    <p>Thank you for attending <strong>${object.event_id.name}</strong>.</p>
+
+                    <p>We would really appreciate your feedback. Please take a moment to complete this short survey:</p>
+
+                    <p style="margin: 20px 0;">
+                        <a href="${object.user_input_id.survey_id.get_start_url(object.user_input_id.token)}"
+                           style="background-color: #008f8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+                            👉 Start the Survey
+                        </a>
+                    </p>
+
+                    <p>No login is required. Your response will be automatically linked to your participation.</p>
+
+                    <p>Thank you again for your time and your insights!</p>
+
+                    <p>Warm regards,<br/>The iN-Clue Team</p>
+                </div>
+                ]]>
+            </field>
+            <field name="lang">${object.partner_id.lang or 'en_US'}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

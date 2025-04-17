@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <!-- Tree and Form Views for Participation Tracking -->
+        <record id="view_inclue_participation_tree" model="ir.ui.view">
+            <field name="name">inclue.participation.tree</field>
+            <field name="model">inclue.participation</field>
+            <field name="arch" type="xml">
+                <tree string="Participation Tracking">
+                    <field name="partner_id" string="Partner ID"/>
+                    <field name="event_id" string="Event ID"/>
+                    <field name="session_type" string="Session Type"/>
+                    <field name="completed" string="Status"/>
+                    <field name="date_completed" string="Date Completed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_inclue_participation_form" model="ir.ui.view">
+            <field name="name">inclue.participation.form</field>
+            <field name="model">inclue.participation</field>
+            <field name="arch" type="xml">
+                <form string="Participation Tracking">
+                    <sheet>
+                        <group>
+                            <field name="partner_id" string="Partner ID"/>
+                            <field name="event_id" string="Event ID"/>
+                            <field name="survey_id" string="Survey ID"/>
+                            <field name="user_input_id" string="User Input ID"/>
+                            <field name="session_type" string="Session Type"/>
+                            <field name="completed" string="Status"/>
+                            <field name="date_completed" string="Date Completed"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_inclue_participation" model="ir.actions.act_window">
+            <field name="name">iN-Clue Participation Tracking</field>
+            <field name="res_model">inclue.participation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_inclue_journey_root" name="iN-Clue Journey" sequence="10"/>
+        <menuitem id="menu_inclue_participation" name="Participation Tracking" 
+                parent="menu_inclue_journey_root" action="action_inclue_participation" sequence="10"/>
+    </data>
+</odoo>
