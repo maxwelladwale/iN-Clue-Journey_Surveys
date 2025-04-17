@@ -20,12 +20,12 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
-        'data/survey_templates.xml',
+        # 'data/survey_templates.xml',
         'views/event_form.xml',
         'views/participation_tracking.xml',
         'views/survey_form.xml',
-        'views/inclue_dashboard.xml',
-        'views/portal_templates.xml',
+        # 'views/inclue_dashboard.xml',
+        # 'views/portal_templates.xml',
         'data/email_templates.xml',
     ],
     'assets': {

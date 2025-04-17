@@ -57,6 +57,42 @@ class SurveySurvey(models.Model):
             survey.inclue_completed_count = completed
             survey.inclue_completion_rate = (completed / sent * 100) if sent > 0 else 0.0
 
+    def action_view_participations(self):
+        """Action to view participations for this survey"""
+        self.ensure_one()
+        return {
+            'name': 'Survey Participations',
+            'type': 'ir.actions.act_window',
+            'res_model': 'inclue.participation',
+            'view_mode': 'tree,form',
+            'domain': [('survey_id', '=', self.id)],
+            'context': {'default_survey_id': self.id},
+        }
+
+    def action_view_completed(self):
+        """Action to view completed participations for this survey"""
+        self.ensure_one()
+        return {
+            'name': 'Completed Surveys',
+            'type': 'ir.actions.act_window',
+            'res_model': 'inclue.participation',
+            'view_mode': 'tree,form',
+            'domain': [('survey_id', '=', self.id), ('completed', '=', True)],
+            'context': {'default_survey_id': self.id},
+        }
+
+    def action_view_stats(self):
+        """Action to view survey statistics"""
+        self.ensure_one()
+        return {
+            'name': 'Survey Statistics',
+            'type': 'ir.actions.act_window',
+            'res_model': 'survey.user_input',
+            'view_mode': 'graph',
+            'domain': [('survey_id', '=', self.id)],
+            'context': {'default_survey_id': self.id},
+        }
+
 class SurveyUserInput(models.Model):
     _inherit = 'survey.user_input'
     
