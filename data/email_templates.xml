@@ -1,5 +1,6 @@
 <odoo>
     <data>
+        <!-- Main Survey Invitation Template -->
         <record id="mail_template_inclue_survey" model="mail.template">
             <field name="name">iN-Clue Survey Invitation</field>
             <field name="model_id" ref="model_inclue_participation"/>
@@ -27,6 +28,73 @@
                     <p>Thank you again for your time and your insights!</p>
 
                     <p>Warm regards,<br/>The iN-Clue Team</p>
+                </div>
+                ]]>
+            </field>
+            <field name="lang">${object.partner_id.lang or 'en_US'}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        
+        <!-- Reminder Template -->
+        <record id="mail_template_inclue_survey_reminder" model="mail.template">
+            <field name="name">iN-Clue Survey Reminder</field>
+            <field name="model_id" ref="model_inclue_participation"/>
+            <field name="subject">Reminder: Please complete your iN-Clue Survey</field>
+            <field name="email_from">${(user.email_formatted or 'noreply@yourcompany.com')|safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or object.partner_id.email)|safe}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6;">
+                    <p>Hello ${object.partner_id.name},</p>
+
+                    <p>This is a friendly reminder to complete the survey for <strong>${object.event_id.name}</strong>.</p>
+
+                    <p>Your feedback is very important to us and will help improve future sessions.</p>
+
+                    <p style="margin: 20px 0;">
+                        <a href="${object.user_input_id.survey_id.get_start_url(object.user_input_id.token)}"
+                           style="background-color: #ff9900; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+                            📝 Complete the Survey
+                        </a>
+                    </p>
+
+                    <p>The survey will only take a few minutes of your time.</p>
+
+                    <p>Thank you for your participation in the iN-Clue Journey!</p>
+
+                    <p>Warm regards,<br/>The iN-Clue Team</p>
+                </div>
+                ]]>
+            </field>
+            <field name="lang">${object.partner_id.lang or 'en_US'}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        
+        <!-- Next Session Notification Template -->
+        <record id="mail_template_inclue_next_session" model="mail.template">
+            <field name="name">iN-Clue Next Session Notification</field>
+            <field name="model_id" ref="model_inclue_participation"/>
+            <field name="subject">Your next iN-Clue session is scheduled</field>
+            <field name="email_from">${(user.email_formatted or 'noreply@yourcompany.com')|safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or object.partner_id.email)|safe}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6;">
+                    <p>Hello ${object.partner_id.name},</p>
+
+                    <p>We're pleased to inform you that your next iN-Clue session has been scheduled:</p>
+                    
+                    <div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-left: 4px solid #008f8c; border-radius: 4px;">
+                        <p><strong>Session:</strong> ${object.event_id.name}</p>
+                        <p><strong>Date:</strong> ${object.event_id.date_begin}</p>
+                        <p><strong>Type:</strong> ${dict(object._fields['session_type'].selection).get(object.session_type)}</p>
+                    </div>
+
+                    <p>This is an important part of your iN-Clue Journey. We look forward to your participation!</p>
+
+                    <p>If you have any questions or need to reschedule, please contact your facilitator.</p>
+
+                    <p>Best regards,<br/>The iN-Clue Team</p>
                 </div>
                 ]]>
             </field>

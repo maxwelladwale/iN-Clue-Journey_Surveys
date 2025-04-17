@@ -6,11 +6,18 @@
             <field name="model">inclue.participation</field>
             <field name="arch" type="xml">
                 <tree string="Participation Tracking">
-                    <field name="partner_id" string="Partner ID"/>
-                    <field name="event_id" string="Event ID"/>
-                    <field name="session_type" string="Session Type"/>
-                    <field name="completed" string="Status"/>
-                    <field name="date_completed" string="Date Completed"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="event_id"/>
+                    <field name="session_type"/>
+                    <field name="survey_sent"/>
+                    <field name="completed"/>
+                    <field name="date_completed"/>
+                    <field name="journey_progress" widget="progressbar"/>
+                    <button name="send_survey_email" string="Send Survey" type="object" 
+                            icon="fa-envelope" attrs="{'invisible': ['|', ('survey_sent', '=', True), ('completed', '=', True)]}"/>
+                    <button name="send_reminder_email" string="Send Reminder" type="object" 
+                            icon="fa-bell" attrs="{'invisible': ['|', ('survey_sent', '=', False), ('completed', '=', True)]}"/>
                 </tree>
             </field>
         </record>
@@ -20,27 +27,149 @@
             <field name="model">inclue.participation</field>
             <field name="arch" type="xml">
                 <form string="Participation Tracking">
+                    <header>
+                        <button name="send_survey_email" string="Send Survey" type="object" 
+                                class="oe_highlight" attrs="{'invisible': ['|', ('survey_sent', '=', True), ('completed', '=', True)]}"/>
+                        <button name="send_reminder_email" string="Send Reminder" type="object" 
+                                class="btn-primary" attrs="{'invisible': ['|', ('survey_sent', '=', False), ('completed', '=', True)]}"/>
+                        <button name="schedule_next_session" string="Schedule Next Session" type="object"
+                                class="btn-primary" attrs="{'invisible': ['|', ('completed', '=', False), ('session_type', '=', 'followup6')]}"/>
+                        <field name="completed" widget="statusbar" statusbar_visible="False,True"/>
+                    </header>
                     <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
                         <group>
-                            <field name="partner_id" string="Partner ID"/>
-                            <field name="event_id" string="Event ID"/>
-                            <field name="survey_id" string="Survey ID"/>
-                            <field name="user_input_id" string="User Input ID"/>
-                            <field name="session_type" string="Session Type"/>
-                            <field name="completed" string="Status"/>
-                            <field name="date_completed" string="Date Completed"/>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="event_id"/>
+                                <field name="facilitator_id"/>
+                                <field name="survey_id"/>
+                                <field name="session_type"/>
+                            </group>
+                            <group>
+                                <field name="user_input_id"/>
+                                <field name="survey_sent"/>
+                                <field name="reminder_sent"/>
+                                <field name="date_completed"/>
+                                <field name="next_session_date"/>
+                                <field name="journey_progress" widget="progressbar"/>
+                            </group>
                         </group>
+                        <notebook>
+                            <page string="Next Steps" name="next_steps">
+                                <field name="next_step_description" nolabel="1"/>
+                            </page>
+                        </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
 
+        <!-- Search View -->
+        <record id="view_inclue_participation_search" model="ir.ui.view">
+            <field name="name">inclue.participation.search</field>
+            <field name="model">inclue.participation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id"/>
+                    <field name="event_id"/>
+                    <field name="facilitator_id"/>
+                    <filter string="Completed" name="completed" domain="[('completed', '=', True)]"/>
+                    <filter string="Not Completed" name="not_completed" domain="[('completed', '=', False)]"/>
+                    <filter string="Survey Sent" name="survey_sent" domain="[('survey_sent', '=', True)]"/>
+                    <filter string="Survey Not Sent" name="survey_not_sent" domain="[('survey_sent', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Event" name="group_by_event" domain="[]" context="{'group_by': 'event_id'}"/>
+                        <filter string="Session Type" name="group_by_session" domain="[]" context="{'group_by': 'session_type'}"/>
+                        <filter string="Facilitator" name="group_by_facilitator" domain="[]" context="{'group_by': 'facilitator_id'}"/>
+                        <filter string="Completion Status" name="group_by_completed" domain="[]" context="{'group_by': 'completed'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_inclue_participation_kanban" model="ir.ui.view">
+            <field name="name">inclue.participation.kanban</field>
+            <field name="model">inclue.participation</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="event_id"/>
+                    <field name="session_type"/>
+                    <field name="completed"/>
+                    <field name="survey_sent"/>
+                    <field name="journey_progress"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <strong><field name="name"/></strong>
+                                    <div class="o_kanban_record_subtitle">
+                                        <field name="partner_id"/>
+                                    </div>
+                                    <div>
+                                        <field name="event_id"/>
+                                    </div>
+                                    <div>
+                                        <span t-if="record.completed.raw_value" class="badge badge-success">
+                                            Completed
+                                        </span>
+                                        <span t-else="" class="badge badge-warning">
+                                            Pending
+                                        </span>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="journey_progress" widget="progressbar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Calendar View -->
+        <record id="view_inclue_participation_calendar" model="ir.ui.view">
+            <field name="name">inclue.participation.calendar</field>
+            <field name="model">inclue.participation</field>
+            <field name="arch" type="xml">
+                <calendar string="Participation Calendar" date_start="date_completed" color="partner_id">
+                    <field name="partner_id"/>
+                    <field name="event_id"/>
+                    <field name="session_type"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Action -->
         <record id="action_inclue_participation" model="ir.actions.act_window">
             <field name="name">iN-Clue Participation Tracking</field>
             <field name="res_model">inclue.participation</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban,calendar</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No participation records found.
+                </p>
+                <p>
+                    Track iN-Clue Journey participation across events and sessions.
+                </p>
+            </field>
         </record>
 
+        <!-- Menu Items -->
         <menuitem id="menu_inclue_journey_root" name="iN-Clue Journey" sequence="10"/>
         <menuitem id="menu_inclue_participation" name="Participation Tracking" 
                 parent="menu_inclue_journey_root" action="action_inclue_participation" sequence="10"/>

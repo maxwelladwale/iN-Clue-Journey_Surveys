@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <!-- Extend Survey Form -->
+        <record id="view_survey_form_inherit_inclue" model="ir.ui.view">
+            <field name="name">survey.survey.form.inherit.inclue</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='title']" position="after">
+                    <div class="oe_button_box" name="button_box" attrs="{'invisible': [('is_inclue_survey', '=', False)]}">
+                        <button name="action_view_participations" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="inclue_sent_count" string="Sent" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_completed" type="object" class="oe_stat_button" icon="fa-check">
+                            <field name="inclue_completed_count" string="Completed" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_stats" type="object" class="oe_stat_button" icon="fa-bar-chart">
+                            <span>Analytics</span>
+                        </button>
+                    </div>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="iN-Clue Journey" attrs="{'invisible': [('is_inclue_survey', '=', False)]}">
+                        <group>
+                            <group>
+                                <field name="is_inclue_survey"/>
+                                <field name="session_type" attrs="{'required': [('is_inclue_survey', '=', True)]}"/>
+                            </group>
+                            <group>
+                                <field name="inclue_completion_rate" widget="percentage"/>
+                            </group>
+                        </group>
+                        <field name="participation_ids" readonly="1">
+                            <tree>
+                                <field name="partner_id"/>
+                                <field name="event_id"/>
+                                <field name="survey_sent"/>
+                                <field name="completed"/>
+                                <field name="date_completed"/>
+                                <button name="send_survey_email" string="Send Survey" type="object" 
+                                        icon="fa-envelope" attrs="{'invisible': ['|', ('survey_sent', '=', True), ('completed', '=', True)]}"/>
+                                <button name="send_reminder_email" string="Send Reminder" type="object" 
+                                        icon="fa-bell" attrs="{'invisible': ['|', ('survey_sent', '=', False), ('completed', '=', True)]}"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Extend Survey List View -->
+        <record id="view_survey_tree_inherit_inclue" model="ir.ui.view">
+            <field name="name">survey.survey.tree.inherit.inclue</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='title']" position="after">
+                    <field name="is_inclue_survey"/>
+                    <field name="session_type" attrs="{'invisible': [('is_inclue_survey', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Extend Survey Search View -->
+        <record id="view_survey_search_inherit_inclue" model="ir.ui.view">
+            <field name="name">survey.survey.search.inherit.inclue</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_survey_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="after">
+                    <separator/>
+                    <filter string="iN-Clue Surveys" name="is_inclue_survey" domain="[('is_inclue_survey', '=', True)]"/>
+                    <filter string="Kickoff Surveys" name="kickoff" domain="[('session_type', '=', 'kickoff')]"/>
+                    <filter string="FollowUp Surveys" name="followup" domain="[('session_type', 'in', ['followup1', 'followup2', 'followup3', 'followup4', 'followup5', 'followup6'])]"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <filter string="Session Type" name="group_by_session_type" context="{'group_by': 'session_type'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

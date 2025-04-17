@@ -1,0 +1,87 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Kickoff Survey Template -->
+        <record id="survey_inclue_kickoff" model="survey.survey">
+            <field name="title">iN-Clue Kickoff Session Survey</field>
+            <field name="is_inclue_survey" eval="True"/>
+            <field name="session_type">kickoff</field>
+            <field name="access_mode">public</field>
+            <field name="users_login_required" eval="False"/>
+            <field name="users_can_go_back" eval="True"/>
+            <field name="description"><![CDATA[
+                <p>Thank you for participating in the iN-Clue Kickoff Session. Please take a moment to share your feedback.</p>
+            ]]></field>
+        </record>
+        
+        <!-- Sample questions for kickoff survey -->
+        <record id="survey_inclue_kickoff_q1" model="survey.question">
+            <field name="title">How would you rate the overall quality of the session?</field>
+            <field name="question_type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+            <field name="survey_id" ref="survey_inclue_kickoff"/>
+            <field name="sequence">1</field>
+        </record>
+        
+        <!-- Add matrix options -->
+        <record id="survey_inclue_kickoff_q1_row1" model="survey.question.answer">
+            <field name="value">Session content</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+            <field name="answer_type">row</field>
+        </record>
+        <record id="survey_inclue_kickoff_q1_row2" model="survey.question.answer">
+            <field name="value">Facilitator</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+            <field name="answer_type">row</field>
+        </record>
+        <record id="survey_inclue_kickoff_q1_row3" model="survey.question.answer">
+            <field name="value">Materials</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+            <field name="answer_type">row</field>
+        </record>
+        
+        <!-- Matrix columns -->
+        <record id="survey_inclue_kickoff_q1_col1" model="survey.question.answer">
+            <field name="value">Poor</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+            <field name="answer_type">col</field>
+        </record>
+        <record id="survey_inclue_kickoff_q1_col2" model="survey.question.answer">
+            <field name="value">Fair</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+            <field name="answer_type">col</field>
+        </record>
+        <record id="survey_inclue_kickoff_q1_col3" model="survey.question.answer">
+            <field name="value">Good</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+            <field name="answer_type">col</field>
+        </record>
+        <record id="survey_inclue_kickoff_q1_col4" model="survey.question.answer">
+            <field name="value">Excellent</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+            <field name="answer_type">col</field>
+        </record>
+
+        <!-- Text question -->
+        <record id="survey_inclue_kickoff_q2" model="survey.question">
+            <field name="title">What are your key takeaways from this session?</field>
+            <field name="question_type">text_box</field>
+            <field name="survey_id" ref="survey_inclue_kickoff"/>
+            <field name="sequence">2</field>
+        </record>
+        
+        <!-- Similar templates for follow-up sessions -->
+        <record id="survey_inclue_followup1" model="survey.survey">
+            <field name="title">iN-Clue Follow-Up Session 1 Survey</field>
+            <field name="is_inclue_survey" eval="True"/>
+            <field name="session_type">followup1</field>
+            <field name="access_mode">public</field>
+            <field name="users_login_required" eval="False"/>
+            <field name="users_can_go_back" eval="True"/>
+            <field name="description"><![CDATA[
+                <p>Thank you for participating in the first iN-Clue Follow-Up Session. Please share your feedback and progress.</p>
+            ]]></field>
+        </record>
+        
+        <!-- Add more follow-up surveys as needed -->
+    </data>
+</odoo>

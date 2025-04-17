@@ -1,0 +1,9 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Assign existing event managers to iN-Clue User group -->
+        <record id="inclue_event_managers_assignment" model="ir.config_parameter">
+            <field name="key">inclueyoh.auto_assign_groups</field>
+            <field name="value">True</field>
+        </record>
+    </data>
+</odoo>
