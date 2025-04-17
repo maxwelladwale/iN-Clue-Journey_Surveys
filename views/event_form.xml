@@ -7,10 +7,36 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page string="iN-Clue Survey" name="inclue_survey">
+                    <page string="iN-Clue Journey" name="inclue_journey">
                         <group>
-                            <field name="survey_id"/>
+                            <group>
+                                <field name="survey_id" domain="[('is_inclue_survey', '=', True)]"/>
+                                <field name="survey_sent"/>
+                                <field name="session_type" required="1"/>
+                            </group>
+                            <group>
+                                <field name="total_participants"/>
+                                <field name="completed_surveys"/>
+                                <field name="completion_rate" widget="percentage"/>
+                            </group>
                         </group>
+                        <notebook>
+                            <page string="Participants" name="participants">
+                                <field name="participation_ids" readonly="1">
+                                    <tree>
+                                        <field name="partner_id"/>
+                                        <field name="survey_sent"/>
+                                        <field name="completed"/>
+                                        <field name="date_completed"/>
+                                        <field name="journey_progress" widget="progressbar"/>
+                                        <button name="send_survey_email" string="Send Survey" type="object" 
+                                                icon="fa-envelope" attrs="{'invisible': ['|', ('survey_sent', '=', True), ('completed', '=', True)]}"/>
+                                        <button name="send_reminder_email" string="Send Reminder" type="object" 
+                                                icon="fa-bell" attrs="{'invisible': ['|', ('survey_sent', '=', False), ('completed', '=', True)]}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </page>
                 </xpath>
             </field>
@@ -28,6 +54,11 @@
                             string="Send iN-Clue Survey"
                             class="oe_highlight"
                             attrs="{'invisible': ['|', ('survey_id', '=', False), ('survey_sent', '=', True)]}"/>
+                    <button name="action_schedule_next_session"
+                            type="object"
+                            string="Schedule Next Session"
+                            class="btn-primary"
+                            attrs="{'invisible': [('session_type', '=', 'followup6')]}"/>
                 </xpath>
             </field>
         </record>

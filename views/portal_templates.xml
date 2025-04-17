@@ -1,0 +1,228 @@
+<odoo>
+    <data>
+        <!-- Portal Menu Entry -->
+        <template id="portal_my_home_inclue" name="Portal My Home : iN-Clue Journey" inherit_id="portal.portal_my_home" priority="40">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="media align-items-center">
+                                <div class="o_image mr-3 rounded-circle p-1 border bg-white">
+                                    <img class="o_portal_menu_icon" src="/inclueyoh/static/description/icon.png" t-att-alt="'iN-Clue Journey'"/>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="card-title m-0">Your iN-Clue Journey</h3>
+                                    <div>
+                                        <a href="/my/inclue" class="btn btn-outline-primary mt-2">
+                                            <t t-if="participation_count" t-esc="participation_count"/>
+                                            <t t-else="">0</t>
+                                            <t t-if="participation_count == 1">Session</t>
+                                            <t t-else="">Sessions</t>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        
+        <!-- Main Portal Template for iN-Clue Journey -->
+        <template id="portal_my_inclue" name="My iN-Clue Journey">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">iN-Clue Journey</t>
+                </t>
+                
+                <div class="o_portal_inclue_journey">
+                    <!-- Journey Progress -->
+                    <div class="row mt16 mb8">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Your Journey Progress</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" t-att-style="'width: %s%%;' % overall_progress" 
+                                            t-att-aria-valuenow="overall_progress" aria-valuemin="0" aria-valuemax="100">
+                                            <t t-esc="overall_progress"/>%
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <t t-if="overall_progress == 0">
+                                            Begin your iN-Clue Journey by attending your first session.
+                                        </t>
+                                        <t t-elif="overall_progress &lt; 50">
+                                            You're just getting started on your iN-Clue Journey.
+                                        </t>
+                                        <t t-elif="overall_progress &lt; 100">
+                                            You're making good progress on your iN-Clue Journey.
+                                        </t>
+                                        <t t-else="">
+                                            Congratulations! You've completed your iN-Clue Journey.
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Session Cards -->
+                    <h3 class="page-header mt16">Your Sessions</h3>
+                    <t t-if="not participations">
+                        <div class="alert alert-info">
+                            <p class="mb-0">You haven't attended any iN-Clue sessions yet.</p>
+                        </div>
+                    </t>
+                    <div class="row">
+                        <t t-foreach="participations" t-as="participation">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div t-attf-class="card h-100 #{'border-success' if participation.completed else 'border-warning'}">
+                                    <div t-attf-class="card-header #{'bg-success text-white' if participation.completed else 'bg-warning text-dark'}">
+                                        <h5 class="mb-0">
+                                            <t t-esc="dict(participation._fields['session_type'].selection).get(participation.session_type)"/>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title"><t t-esc="participation.event_id.name"/></h5>
+                                        <p class="card-text">
+                                            <strong>Date:</strong> <t t-esc="participation.event_id.date_begin" t-options="{'widget': 'datetime'}"/>
+                                        </p>
+                                        <div class="progress mb-3">
+                                            <div class="progress-bar" role="progressbar" t-att-style="'width: %s%%;' % participation.journey_progress" 
+                                                t-att-aria-valuenow="participation.journey_progress" aria-valuemin="0" aria-valuemax="100">
+                                                <t t-esc="participation.journey_progress"/>%
+                                            </div>
+                                        </div>
+                                        <t t-if="participation.completed">
+                                            <div class="alert alert-success">
+                                                <i class="fa fa-check-circle"></i> Survey Completed
+                                            </div>
+                                        </t>
+                                        <t t-elif="participation.survey_sent">
+                                            <div class="alert alert-warning">
+                                                <i class="fa fa-exclamation-circle"></i> Survey Pending
+                                            </div>
+                                            <a t-att-href="'/survey/start/%s/%s' % (participation.survey_id.access_token, participation.user_input_id.token)" class="btn btn-primary btn-block">
+                                                Take Survey
+                                            </a>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="alert alert-info">
+                                                <i class="fa fa-info-circle"></i> Survey will be sent soon
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">
+                                            <t t-if="participation.completed">
+                                                Completed on <t t-esc="participation.date_completed" t-options="{'widget': 'datetime'}"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-if="participation.next_session_date">
+                                                    Next session scheduled for <t t-esc="participation.next_session_date" t-options="{'widget': 'date'}"/>
+                                                </t>
+                                                <t t-else="">
+                                                    No next session scheduled yet
+                                                </t>
+                                            </t>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+        <!-- Portal Participation Detail -->
+        <template id="portal_my_inclue_participation" name="My iN-Clue Participation">
+            <t t-call="portal.portal_layout">
+                <t t-set="o_portal_breadcrumbs" t-value="[('/my/inclue', 'iN-Clue Journey'), ('', participation.name)]"/>
+                
+                <div class="o_portal_inclue_participation">
+                    <div class="row mt16 mb8">
+                        <div class="col-12">
+                            <h1><t t-esc="participation.name"/></h1>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Session Details</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Event:</strong> <t t-esc="participation.event_id.name"/><br/>
+                                    <strong>Date:</strong> <t t-esc="participation.event_id.date_begin" t-options="{'widget': 'datetime'}"/><br/>
+                                    <strong>Session Type:</strong> <t t-esc="dict(participation._fields['session_type'].selection).get(participation.session_type)"/><br/>
+                                    <strong>Facilitator:</strong> <t t-esc="participation.facilitator_id.name"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Status:</strong> 
+                                    <span t-if="participation.completed" class="badge badge-success">Completed</span>
+                                    <span t-else="" class="badge badge-warning">Pending</span><br/>
+                                    
+                                    <t t-if="participation.completed">
+                                        <strong>Completed On:</strong> <t t-esc="participation.date_completed" t-options="{'widget': 'datetime'}"/><br/>
+                                    </t>
+                                    
+                                    <strong>Journey Progress:</strong> <t t-esc="participation.journey_progress"/>%<br/>
+                                    
+                                    <t t-if="participation.next_session_date">
+                                        <strong>Next Session:</strong> <t t-esc="participation.next_session_date" t-options="{'widget': 'date'}"/>
+                                    </t>
+                                </div>
+                            </div>
+                            
+                            <div class="progress mt-4">
+                                <div class="progress-bar" role="progressbar" t-att-style="'width: %s%%;' % participation.journey_progress" 
+                                    t-att-aria-valuenow="participation.journey_progress" aria-valuemin="0" aria-valuemax="100">
+                                    <t t-esc="participation.journey_progress"/>%
+                                </div>
+                            </div>
+                            
+                            <!-- Survey Section -->
+                            <div class="mt-4">
+                                <t t-if="participation.completed">
+                                    <div class="alert alert-success">
+                                        <i class="fa fa-check-circle"></i> You have completed the survey for this session. Thank you!
+                                    </div>
+                                </t>
+                                <t t-elif="participation.survey_sent">
+                                    <div class="alert alert-warning">
+                                        <i class="fa fa-exclamation-circle"></i> Please complete the survey for this session.
+                                    </div>
+                                    <a t-att-href="'/survey/start/%s/%s' % (participation.survey_id.access_token, participation.user_input_id.token)" class="btn btn-primary">
+                                        Start Survey
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <div class="alert alert-info">
+                                        <i class="fa fa-info-circle"></i> A survey for this session will be sent to you soon.
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Next Steps Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Your Next Steps</h3>
+                        </div>
+                        <div class="card-body">
+                            <t t-raw="participation.next_step_description"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
