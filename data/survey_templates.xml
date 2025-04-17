@@ -13,7 +13,7 @@
             ]]></field>
         </record>
         
-        <!-- Sample questions for kickoff survey -->
+        <!-- Matrix question for kickoff survey -->
         <record id="survey_inclue_kickoff_q1" model="survey.question">
             <field name="title">How would you rate the overall quality of the session?</field>
             <field name="question_type">matrix</field>
@@ -22,43 +22,41 @@
             <field name="sequence">1</field>
         </record>
         
-        <!-- Add matrix options -->
-        <record id="survey_inclue_kickoff_q1_row1" model="survey.question.answer">
+        <!-- Matrix rows (labels) -->
+        <record id="survey_inclue_kickoff_q1_label1" model="survey.question.matrix.row">
             <field name="value">Session content</field>
             <field name="question_id" ref="survey_inclue_kickoff_q1"/>
-            <field name="answer_type">row</field>
-        </record>
-        <record id="survey_inclue_kickoff_q1_row2" model="survey.question.answer">
-            <field name="value">Facilitator</field>
-            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
-            <field name="answer_type">row</field>
-        </record>
-        <record id="survey_inclue_kickoff_q1_row3" model="survey.question.answer">
-            <field name="value">Materials</field>
-            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
-            <field name="answer_type">row</field>
         </record>
         
-        <!-- Matrix columns -->
-        <record id="survey_inclue_kickoff_q1_col1" model="survey.question.answer">
+        <record id="survey_inclue_kickoff_q1_label2" model="survey.question.matrix.row">
+            <field name="value">Facilitator</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+        </record>
+        
+        <record id="survey_inclue_kickoff_q1_label3" model="survey.question.matrix.row">
+            <field name="value">Materials</field>
+            <field name="question_id" ref="survey_inclue_kickoff_q1"/>
+        </record>
+        
+        <!-- Matrix column options (suggested answers) -->
+        <record id="survey_inclue_kickoff_q1_answer1" model="survey.question.answer">
             <field name="value">Poor</field>
             <field name="question_id" ref="survey_inclue_kickoff_q1"/>
-            <field name="answer_type">col</field>
         </record>
-        <record id="survey_inclue_kickoff_q1_col2" model="survey.question.answer">
+        
+        <record id="survey_inclue_kickoff_q1_answer2" model="survey.question.answer">
             <field name="value">Fair</field>
             <field name="question_id" ref="survey_inclue_kickoff_q1"/>
-            <field name="answer_type">col</field>
         </record>
-        <record id="survey_inclue_kickoff_q1_col3" model="survey.question.answer">
+        
+        <record id="survey_inclue_kickoff_q1_answer3" model="survey.question.answer">
             <field name="value">Good</field>
             <field name="question_id" ref="survey_inclue_kickoff_q1"/>
-            <field name="answer_type">col</field>
         </record>
-        <record id="survey_inclue_kickoff_q1_col4" model="survey.question.answer">
+        
+        <record id="survey_inclue_kickoff_q1_answer4" model="survey.question.answer">
             <field name="value">Excellent</field>
             <field name="question_id" ref="survey_inclue_kickoff_q1"/>
-            <field name="answer_type">col</field>
         </record>
 
         <!-- Text question -->
@@ -69,7 +67,7 @@
             <field name="sequence">2</field>
         </record>
         
-        <!-- Similar templates for follow-up sessions -->
+        <!-- Follow-up session survey -->
         <record id="survey_inclue_followup1" model="survey.survey">
             <field name="title">iN-Clue Follow-Up Session 1 Survey</field>
             <field name="is_inclue_survey" eval="True"/>

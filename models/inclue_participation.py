@@ -9,8 +9,7 @@ class InclueParticipation(models.Model):
     _name = 'inclue.participation'
     _description = 'Tracks user participation in the iN-Clue journey'
     _order = 'create_date desc'
-    _inherit = ['portal.mixin']
-
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     name = fields.Char(
         string='Reference',
         compute='_compute_name',

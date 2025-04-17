@@ -4,9 +4,9 @@
         <record id="view_survey_form_inherit_inclue" model="ir.ui.view">
             <field name="name">survey.survey.form.inherit.inclue</field>
             <field name="model">survey.survey</field>
-            <field name="inherit_id" ref="survey.survey_form"/>
+            <field name="inherit_id" ref="survey.survey_survey_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='title']" position="after">
+                <xpath expr="//sheet" position="inside">
                     <div class="oe_button_box" name="button_box" attrs="{'invisible': [('is_inclue_survey', '=', False)]}">
                         <button name="action_view_participations" type="object" class="oe_stat_button" icon="fa-users">
                             <field name="inclue_sent_count" string="Sent" widget="statinfo"/>
@@ -37,10 +37,8 @@
                                 <field name="survey_sent"/>
                                 <field name="completed"/>
                                 <field name="date_completed"/>
-                                <button name="send_survey_email" string="Send Survey" type="object" 
-                                        icon="fa-envelope" attrs="{'invisible': ['|', ('survey_sent', '=', True), ('completed', '=', True)]}"/>
-                                <button name="send_reminder_email" string="Send Reminder" type="object" 
-                                        icon="fa-bell" attrs="{'invisible': ['|', ('survey_sent', '=', False), ('completed', '=', True)]}"/>
+                                <button name="send_survey_email" string="Send Survey" type="object" icon="fa-envelope" attrs="{'invisible': ['|', ('survey_sent', '=', True), ('completed', '=', True)]}"/>
+                                <button name="send_reminder_email" string="Send Reminder" type="object" icon="fa-bell" attrs="{'invisible': ['|', ('survey_sent', '=', False), ('completed', '=', True)]}"/>
                             </tree>
                         </field>
                     </page>
@@ -52,7 +50,7 @@
         <record id="view_survey_tree_inherit_inclue" model="ir.ui.view">
             <field name="name">survey.survey.tree.inherit.inclue</field>
             <field name="model">survey.survey</field>
-            <field name="inherit_id" ref="survey.survey_tree"/>
+            <field name="inherit_id" ref="survey.survey_survey_view_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='title']" position="after">
                     <field name="is_inclue_survey"/>
