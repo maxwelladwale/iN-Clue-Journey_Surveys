@@ -1,0 +1,44 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Ignore Odoo logs
+*.log
+
+# Ignore Odoo database files
+*.db
+*.sqlite
+
+# Ignore Odoo session files
+*.session
+
+# Ignore compiled assets (CSS, JS)
+*.css
+*.js
+*.scss
+*.sass
+
+# Ignore Odoo generated files for various add-ons
+*.pid
+*.sock
+
+# Ignore virtual environment
+venv/
+env/
+*.egg-info/
+*.eggs/
+dist/
+build/
+*.log
+
+# Ignore Odoo dependencies
+*.egg
+
+# Ignore IDE files (for example, PyCharm or VSCode)
+.idea/
+.vscode/
+
+# Ignore Odoo configuration files (optional)
+*.conf
